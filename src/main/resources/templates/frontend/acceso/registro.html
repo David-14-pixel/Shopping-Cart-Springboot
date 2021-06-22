@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>registro</title>
+</head>
+<body>
+<form th:action="@{/registrandose}" method="post">
+<label>Nombre</label>
+<input type="text" th:field="*{cliente.nombre}"><br>
+<label>Apellido(s)</label>
+<input type="text" th:field="*{cliente.apellido}"><br>
+<label>Telefono</label>
+<input type="text" th:field="*{cliente.telefono}"><br>
+<label>Dirección</label>
+<input type="text" th:field="*{direccion.dire}"><br>
+<label>Ciudad</label>
+<select onchange="cargar_municipios(this)">
+<option value="">Seleccione una Ciudad</option>
+<option th:each="ciu : ${ciudades}" th:value="${ciu.id}" th:text="${ciu.nombre}"></option>
+</select><br>
+<label>Municipio</label>
+<select  th:field="*{direccion.municipio}" id="municipios">
+<option value="">Seleccione un municipio</option>
+</select><br>
+<label>Correo</label>
+<input type="text" th:field="*{usuario.correo}"><br>
+<label>Contraseña</label>
+<input type="text" th:field="*{usuario.clave}"><br>
+<button type="submit">Registro</button>
+</form>
+<script type="text/javascript" th:src="@{/frontend/js/jquery-3.6.0.min.js}"></script>
+<script type="text/javascript">
+function cargar_municipios(e){ //ciudades, Provincias
+$("#municipios").html('<option value="">Seleccione un municipio</option>');
+let id=$(e).val();
+$.ajax({
+	url:'/obtener_municipios/'+id,
+	type:'GET',
+	dataType:'json'
+}).done(respuesta=>{
+	respuesta.map(e=>$("#municipios").append(`<option value="${e.id}">${e.nombre}</option>`))
+}).fail(error=>console.log(error))
+
+
+}
+</script>
+</body>
+</html>
